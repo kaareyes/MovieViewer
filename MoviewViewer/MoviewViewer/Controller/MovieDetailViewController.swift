@@ -19,9 +19,11 @@ class MovieDetailViewController: UIViewController {
     @IBOutlet weak var movieDurationLBL: UILabel!
     @IBOutlet weak var movieReleaseDateLBL: UILabel!
     @IBOutlet weak var movieSynopsisLBL: UILabel!
+    @IBOutlet weak var movieCastLabel: UILabel!
     
     var movieData : [String:String] = [:]
-    
+    var movieCastData : [String] = []
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -59,6 +61,9 @@ class MovieDetailViewController: UIViewController {
                 self.movieData["release_date"] = response["release_date"] as? String
                 self.movieData["synopsis"] = response["synopsis"] as? String
                 self.movieData["theater"] = response["theater"] as? String
+                self.movieData["theater"] = response["theater"] as? String
+                self.movieCastData = response["cast"] as! [String]
+                
                 self.displayRetriveData()
             }else{
                 let v  = UIAlertController.init(title: "Error", message: "There is a problem connecting to the server", preferredStyle: UIAlertControllerStyle.alert)
@@ -88,6 +93,18 @@ class MovieDetailViewController: UIViewController {
         self.movieDurationLBL.text = self.movieData["runtime_mins"]
         self.movieReleaseDateLBL.text = self.movieData["release_date"]?.formatDate()
         self.movieSynopsisLBL.text = self.movieData["synopsis"]
+        let castMUl : NSMutableString = NSMutableString()
+        for castName in self.movieCastData {
+            
+            if castMUl.length == 0 {
+                castMUl.append(castName)
+            }else{
+                castMUl.append(", \(castName)")
+
+            }
+            
+            self.movieCastLabel.text = castMUl as! String
+        }
 
     }
     
