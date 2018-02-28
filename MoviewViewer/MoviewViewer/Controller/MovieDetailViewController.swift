@@ -38,7 +38,10 @@ class MovieDetailViewController: UIViewController {
     }
     
     
-    
+    func minutesToHoursMinutes (minutes : String) -> String {
+        let d : Float = Float(minutes)!
+        return "\(Int(d) / 60) hr \(Int(d) % 60)mins"
+    }
     
     func getData(){
         SVProgressHUD.show()
@@ -51,7 +54,8 @@ class MovieDetailViewController: UIViewController {
                 self.movieData["canonical_title"] = response["canonical_title"] as? String
                 self.movieData["genre"] = response["genre"] as? String
                 self.movieData["advisory_rating"] = response["advisory_rating"] as? String
-                self.movieData["runtime_mins"] = response["runtime_mins"] as? String
+
+                self.movieData["runtime_mins"] = self.minutesToHoursMinutes(minutes: (response["runtime_mins"] as? String)!)
                 self.movieData["release_date"] = response["release_date"] as? String
                 self.movieData["synopsis"] = response["synopsis"] as? String
                 self.movieData["theater"] = response["theater"] as? String
@@ -69,6 +73,8 @@ class MovieDetailViewController: UIViewController {
             }
         }
     }
+
+    
     
     func displayRetriveData() {
 
@@ -80,7 +86,7 @@ class MovieDetailViewController: UIViewController {
         self.movieGenreLBL.text = self.movieData["genre"]
         self.movieAdvisoryLBL.text = self.movieData["advisory_rating"]
         self.movieDurationLBL.text = self.movieData["runtime_mins"]
-        self.movieReleaseDateLBL.text = self.movieData["release_date"]
+        self.movieReleaseDateLBL.text = self.movieData["release_date"]?.formatDate()
         self.movieSynopsisLBL.text = self.movieData["synopsis"]
 
     }
@@ -109,4 +115,17 @@ class MovieDetailViewController: UIViewController {
     }
  
 
+}
+
+
+extension String {
+    func formatDate() -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        
+        let date = dateFormatter.date(from: self)
+        dateFormatter.dateFormat = "MMMM dd, YYYY "
+        
+        return dateFormatter.string(from: date!)
+    }
 }
